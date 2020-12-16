@@ -7,7 +7,7 @@ from torchvision.utils import make_grid
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
-def show_tensor_images(image_tensor, num_images=25, size=(1, 28, 28)):
+def show_tensor_images(image_tensor, name, num_images=25, size=(1, 28, 28)):
     '''
     Function for visualizing images: Given a tensor of images, number of images, and
     size per image, plots and prints the images in an uniform grid.
@@ -16,7 +16,8 @@ def show_tensor_images(image_tensor, num_images=25, size=(1, 28, 28)):
     image_unflat = image_tensor.detach().cpu()
     image_grid = make_grid(image_unflat[:num_images], nrow=5)
     plt.imshow(image_grid.permute(1, 2, 0).squeeze())
-    plt.show()
+    # plt.show()
+    plt.savefig(f'{name}.png')
 
 class Generator(nn.Module):
     '''
@@ -254,8 +255,8 @@ def main():
             ## Visualization code ##
             if cur_step % display_step == 0 and cur_step > 0:
                 print(f"Step {cur_step}: Generator loss: {mean_generator_loss}, discriminator loss: {mean_discriminator_loss}")
-                show_tensor_images(fake)
-                show_tensor_images(real)
+                show_tensor_images(fake, "fake")
+                show_tensor_images(real, "real")
                 mean_generator_loss = 0
                 mean_discriminator_loss = 0
                 cur_step += 1
