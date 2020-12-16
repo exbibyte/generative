@@ -60,24 +60,20 @@ class Generator(nn.Module):
         # Build the neural block
         if not final_layer:
             return nn.Sequential(
-                #### START CODE HERE ####
                 nn.ConvTranspose2d(in_channels=input_channels,
                                    out_channels=output_channels,
                                    kernel_size=(kernel_size,kernel_size),
                                    stride=(stride, stride)),
                 nn.BatchNorm2d(output_channels),
                 nn.ReLU(),
-                #### END CODE HERE ####
             )
         else: # Final Layer
             return nn.Sequential(
-                #### START CODE HERE ####
                 nn.ConvTranspose2d(in_channels=input_channels,
                                    out_channels=output_channels,
                                    kernel_size=(kernel_size,kernel_size),
                                    stride=(stride, stride)),
                 nn.Tanh()
-                #### END CODE HERE ####
             )
 
     def unsqueeze_noise(self, noise):
@@ -146,24 +142,19 @@ class Discriminator(nn.Module):
         # Build the neural block
         if not final_layer:
             return nn.Sequential(
-                #### START CODE HERE #### #
                   nn.Conv2d(in_channels=input_channels,
                             out_channels=output_channels,
                             kernel_size=(kernel_size,kernel_size),
                             stride=(stride,stride)),
                   nn.BatchNorm2d(output_channels),
                   nn.LeakyReLU(negative_slope=0.2),
-                #### END CODE HERE ####
             )
         else: # Final Layer
             return nn.Sequential(
-                #### START CODE HERE #### #
                     nn.Conv2d(in_channels=input_channels,
                               out_channels=output_channels,
                               kernel_size=(kernel_size,kernel_size),
                               stride=(stride,stride)),
-                    #nn.LeakyReLU(negative_slope=0.2),
-                #### END CODE HERE ####
             )
 
     def forward(self, image):
@@ -199,7 +190,7 @@ def main():
     print("loading data..")
     
     dataloader = DataLoader(
-        MNIST('.', download=False, transform=transform),
+        MNIST('.', download=True, transform=transform),
         batch_size=batch_size,
         shuffle=True)
 
@@ -269,5 +260,5 @@ def main():
                 mean_discriminator_loss = 0
                 cur_step += 1
 
-def __init__():
+if __name__ == '__main__':
     main()

@@ -229,6 +229,7 @@ def get_crit_loss(crit_fake_pred, crit_real_pred, gp, c_lambda):
     return crit_loss
 
 def main():
+
     n_epochs = 100
     z_dim = 64
     display_step = 50
@@ -239,17 +240,17 @@ def main():
     c_lambda = 10
     crit_repeats = 5
     device = 'cuda'
-
+    
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,)),
     ])
 
     dataloader = DataLoader(
-        MNIST('.', download=False, transform=transform),
+        MNIST('.', download=True, transform=transform),
         batch_size=batch_size,
         shuffle=True)
-
+    
     gen = Generator(z_dim).to(device)
     gen_opt = torch.optim.Adam(gen.parameters(), lr=lr, betas=(beta_1, beta_2))
     crit = Critic().to(device) 
@@ -261,7 +262,9 @@ def main():
     cur_step = 0
     generator_losses = []
     critic_losses = []
+    
     for epoch in range(n_epochs):
+        print(f"epoch: {epoch}")
         # Dataloader returns the batches
         for real, _ in tqdm(dataloader):
             cur_batch_size = len(real)
@@ -328,5 +331,5 @@ def main():
 
             cur_step += 1
         
-def __init__():
+if __name__ == '__main__':
     main()

@@ -22,11 +22,9 @@ def get_generator_block(input_dim, output_dim):
         # Hint: Replace all of the "None" with the appropriate dimensions.
         # The documentation may be useful if you're less familiar with PyTorch:
         # https://pytorch.org/docs/stable/nn.html.
-        #### START CODE HERE ####
         nn.Linear(input_dim, output_dim),
         nn.BatchNorm1d(output_dim),
         nn.ReLU(inplace=True),
-        #### END CODE HERE ####
     )
 
 class Generator(nn.Module):
@@ -46,10 +44,8 @@ class Generator(nn.Module):
             get_generator_block(hidden_dim, hidden_dim * 2),
             get_generator_block(hidden_dim * 2, hidden_dim * 4),
             get_generator_block(hidden_dim * 4, hidden_dim * 8),
-            #### START CODE HERE ####
             nn.Linear(hidden_dim * 8, im_dim), #fully connected layer to contract to expected image size
             nn.Sigmoid()
-            #### END CODE HERE ####
         )
         
     def get_noise(n_samples, z_dim, device='cpu'):
@@ -98,9 +94,7 @@ def get_noise(n_samples, z_dim, device='cpu'):
     '''
     # NOTE: To use this on GPU with device='cuda', make sure to pass the device 
     # argument to the function you use to generate the noise.
-    #### START CODE HERE ####
     return torch.randn(n_samples, z_dim, device=device)
-    #### END CODE HERE ####
 
 def get_discriminator_block(input_dim, output_dim):
     '''
@@ -115,10 +109,8 @@ def get_discriminator_block(input_dim, output_dim):
           (https://pytorch.org/docs/master/generated/torch.nn.LeakyReLU.html)
     '''
     return nn.Sequential(
-        #### START CODE HERE ####
         nn.Linear(input_dim, output_dim),
         nn.LeakyReLU(negative_slope=0.2)
-        #### END CODE HERE ####
     )
 
 class Discriminator(nn.Module):
@@ -137,9 +129,7 @@ class Discriminator(nn.Module):
             get_discriminator_block(hidden_dim * 2, hidden_dim),
             # Hint: You want to transform the final output into a single value,
             #       so add one more linear map.
-            #### START CODE HERE ####
             get_discriminator_block(hidden_dim, 1)
-            #### END CODE HERE ####
         )
 
     def forward(self, image):
@@ -182,7 +172,6 @@ def get_disc_loss(gen, disc, criterion, real, num_images, z_dim, device):
     #     Note: Please do not use concatenation in your solution. The tests are being updated to 
     #           support this, but for now, average the two losses as described in step (4).
     #     *Important*: You should NOT write your own loss function here - use criterion(pred, true)!
-    #### START CODE HERE ####
     
     noise = get_noise(num_images, z_dim, device=device)
     fakes = gen(noise).detach()    
@@ -195,7 +184,6 @@ def get_disc_loss(gen, disc, criterion, real, num_images, z_dim, device):
 
     disc_loss = (loss_disc_real+loss_disc_fake)/2.0
 
-    #### END CODE HERE ####
     return disc_loss
 
 def get_gen_loss(gen, disc, criterion, num_images, z_dim, device):
@@ -222,13 +210,11 @@ def get_gen_loss(gen, disc, criterion, num_images, z_dim, device):
     #          the discriminator to think that its fake images are real
     #     *Important*: You should NOT write your own loss function here - use criterion(pred, true)!
 
-    #### START CODE HERE ####
     noise = get_noise(num_images, z_dim, device=device)
     fakes = gen(noise)
     verdict_fakes = disc(fakes)
     gen_loss = torch.squeeze(criterion(verdict_fakes, torch.ones_like(verdict_fakes)))
-    
-    #### END CODE HERE ####
+
     return gen_loss
 
 def run():
@@ -290,12 +276,11 @@ def run():
             #       1) Zero out the gradients.
             #       2) Calculate the generator loss, assigning it to gen_loss.
             #       3) Backprop through the generator: update the gradients and optimizer.
-            #### START CODE HERE ####
+
             gen_opt.zero_grad()
             gen_loss = get_gen_loss(gen, disc, criterion, cur_batch_size, z_dim, device)
             gen_loss.backward(retain_graph=True)
             gen_opt.step()
-            #### END CODE HERE ####
 
             # For testing purposes, to check that your code changes the generator weights
             if test_generator:
